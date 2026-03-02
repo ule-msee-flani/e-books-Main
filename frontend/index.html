@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookMarket - Buy & Sell eBooks and Products</title>
+  <meta name="description" content="The premier marketplace for eBooks and digital products.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/dark-mode.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-50: #eff6ff;
+      --secondary: #f59e0b;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --header-height: 70px;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+      --transition: 0.2s ease;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+      --space-12: 48px; --space-16: 64px; --space-20: 80px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; color: var(--gray-900); background: white; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 var(--space-6); }
+    .btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: 10px 20px; border-radius: var(--radius); font-weight: 600; font-size: 0.9rem; cursor: pointer; border: 2px solid transparent; transition: all var(--transition); font-family: inherit; }
+    .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: white; }
+    .btn-ghost { background: transparent; color: var(--gray-700); border-color: transparent; }
+    .btn-ghost:hover { background: var(--gray-100); }
+    .btn-secondary { background: var(--secondary); color: white; border-color: var(--secondary); }
+    .btn-lg { padding: 14px 28px; font-size: 1rem; }
+    .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+    .card { background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--gray-100); overflow: hidden; transition: all 0.3s ease; }
+    .card:hover { box-shadow: var(--shadow-xl); transform: translateY(-4px); }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+    .badge-primary { background: var(--primary); color: white; }
+    .badge-success { background: var(--success); color: white; }
+    .badge-verified { background: #ecfdf5; color: var(--success); border: 1px solid #a7f3d0; }
+    .form-input { width: 100%; padding: 10px 14px; border: 2px solid var(--gray-200); border-radius: var(--radius); font-family: inherit; font-size: 0.9rem; transition: border-color var(--transition); outline: none; background: white; }
+    .form-input:focus { border-color: var(--primary); }
+
+    /* Header */
+    .nav-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--gray-200); z-index: 1000; }
+    .nav-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+    .nav-logo { display: flex; align-items: center; gap: var(--space-2); font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
+    .nav-links { display: flex; align-items: center; gap: var(--space-6); }
+    .nav-links a { font-weight: 500; color: var(--gray-600); transition: color var(--transition); font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-search { flex: 1; max-width: 360px; position: relative; }
+    .nav-search input { padding-left: 2.5rem; }
+    .nav-search .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400); font-size: 0.9rem; }
+    .nav-actions { display: flex; align-items: center; gap: var(--space-3); }
+
+    /* User Dropdown */
+    .user-dropdown { position: relative; }
+    .user-trigger { display: flex; align-items: center; gap: var(--space-2); padding: 6px 12px 6px 6px; border-radius: var(--radius-full); cursor: pointer; border: 2px solid var(--gray-200); background: white; transition: all var(--transition); font-family: inherit; }
+    .user-trigger:hover { border-color: var(--primary); background: var(--primary-50); }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; }
+    .user-name { font-weight: 600; font-size: 0.85rem; color: var(--gray-700); }
+    .dropdown-panel { position: absolute; top: calc(100% + 8px); right: 0; width: 300px; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); border: 1px solid var(--gray-200); z-index: 999; display: none; animation: dropIn 0.2s ease; }
+    .dropdown-panel.open { display: block; }
+    @keyframes dropIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .dropdown-header { padding: var(--space-5); border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: var(--space-4); }
+    .dropdown-avatar-lg { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+    .dropdown-user-info .name { font-weight: 700; font-size: 1rem; color: var(--gray-900); }
+    .dropdown-user-info .email { font-size: 0.8rem; color: var(--gray-500); margin-top: 2px; }
+    .dropdown-user-info .role { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 600; color: var(--primary); background: var(--primary-50); padding: 2px 8px; border-radius: var(--radius-full); margin-top: 4px; }
+    .dropdown-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--gray-100); border-top: 1px solid var(--gray-100); border-bottom: 1px solid var(--gray-100); }
+    .dropdown-stat { background: white; padding: var(--space-3); text-align: center; }
+    .dropdown-stat .val { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); }
+    .dropdown-stat .lbl { font-size: 0.7rem; color: var(--gray-500); margin-top: 2px; }
+    .dropdown-menu-items { padding: var(--space-2); }
+    .dropdown-item { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-3); border-radius: var(--radius); color: var(--gray-700); font-size: 0.88rem; font-weight: 500; transition: all var(--transition); cursor: pointer; width: 100%; text-align: left; background: none; border: none; font-family: inherit; }
+    .dropdown-item:hover { background: var(--gray-50); color: var(--primary); }
+    .dropdown-item .icon { width: 32px; height: 32px; border-radius: var(--radius); background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .dropdown-item:hover .icon { background: var(--primary-50); }
+    .dropdown-item.danger { color: var(--error); }
+    .dropdown-item.danger:hover { background: #fef2f2; }
+    .dropdown-divider { height: 1px; background: var(--gray-100); margin: var(--space-2) 0; }
+
+    /* Cart badge */
+    .cart-btn { position: relative; padding: 8px; border-radius: var(--radius); background: none; border: none; cursor: pointer; font-size: 1.3rem; display: flex; align-items: center; }
+    .cart-btn:hover { background: var(--gray-100); }
+    .cart-count { position: absolute; top: 0; right: 0; min-width: 18px; height: 18px; background: var(--error); color: white; border-radius: 9px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+
+    /* Hero */
+    .hero { padding: calc(var(--header-height) + 60px) 0 80px; background: linear-gradient(160deg, #f0f7ff 0%, #fff 55%, #fefce8 100%); position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%); border-radius: 50%; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; background: white; border-radius: var(--radius-full); box-shadow: var(--shadow-md); margin-bottom: var(--space-5); font-size: 0.85rem; font-weight: 500; border: 1px solid var(--gray-200); }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 900; line-height: 1.1; margin-bottom: var(--space-5); color: var(--gray-900); }
+    .hero h1 span { color: var(--primary); }
+    .hero p { font-size: 1.1rem; color: var(--gray-600); line-height: 1.7; margin-bottom: var(--space-8); }
+    .hero-ctas { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-8); }
+    .trust-badges { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--gray-500); }
+    .trust-item span:first-child { color: var(--success); font-weight: 700; }
+
+    /* Hero Book Cards */
+    .hero-books { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); transform: rotate(-2deg); }
+    .hero-book-card { background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xl); border: 1px solid var(--gray-100); }
+    .hero-book-card:first-child { transform: translateY(20px); }
+    .hero-book-card img { width: 100%; height: 180px; object-fit: cover; }
+    .hero-book-info { padding: var(--space-4); }
+    .hero-book-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 4px; }
+    .hero-book-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .hero-stars { color: var(--secondary); font-size: 0.75rem; margin-bottom: 4px; }
+    .hero-price { font-weight: 700; color: var(--primary); font-size: 1rem; }
+
+    /* Stats */
+    .stats-bar { background: white; border-top: 1px solid var(--gray-100); border-bottom: 1px solid var(--gray-100); padding: var(--space-10) 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-8); text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1; }
+    .stat-label { color: var(--gray-500); font-size: 0.875rem; margin-top: var(--space-1); }
+
+    /* Sections */
+    .section { padding: var(--space-20) 0; }
+    .section-alt { background: var(--gray-50); }
+    .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-10); }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--gray-900); margin-bottom: var(--space-1); }
+    .section-sub { color: var(--gray-500); font-size: 0.9rem; }
+
+    /* Carousel */
+    .carousel-wrapper { position: relative; overflow: hidden; }
+    .carousel-track { display: flex; gap: var(--space-5); transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .carousel-slide { min-width: 260px; flex-shrink: 0; }
+    .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: white; border: 2px solid var(--gray-200); box-shadow: var(--shadow-lg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 10; transition: all var(--transition); }
+    .carousel-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .carousel-prev { left: -22px; }
+    .carousel-next { right: -22px; }
+
+    /* Book card */
+    .book-card { background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--gray-100); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; }
+    .book-card:hover { box-shadow: var(--shadow-xl); transform: translateY(-5px); }
+    .book-img { position: relative; overflow: hidden; }
+    .book-img img { width: 100%; height: 320px; object-fit: cover; transition: transform 0.4s ease; }
+    .book-card:hover .book-img img { transform: scale(1.04); }
+    .book-wishlist { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); font-size: 1.1rem; transition: all var(--transition); }
+    .book-wishlist:hover { transform: scale(1.15); }
+    .book-badge { position: absolute; bottom: 12px; left: 12px; }
+    .book-body { padding: var(--space-5); flex: 1; display: flex; flex-direction: column; }
+    .book-genre { font-size: 0.75rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: var(--space-1); }
+    .book-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; line-height: 1.4; color: var(--gray-900); }
+    .book-author { font-size: 0.82rem; color: var(--gray-500); margin-bottom: var(--space-3); }
+    .book-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .book-price { font-size: 1.15rem; font-weight: 700; color: var(--primary); }
+    .book-price-old { font-size: 0.8rem; color: var(--gray-400); text-decoration: line-through; margin-left: 6px; }
+
+    /* Product grid */
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+    .product-card { background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--gray-100); transition: all 0.3s ease; }
+    .product-card:hover { box-shadow: var(--shadow-xl); transform: translateY(-4px); }
+    .product-img { position: relative; overflow: hidden; }
+    .product-img img { width: 100%; height: 220px; object-fit: cover; transition: transform 0.4s; }
+    .product-card:hover .product-img img { transform: scale(1.05); }
+    .product-body { padding: var(--space-4); }
+    .product-title { font-weight: 700; font-size: 0.9rem; margin-bottom: var(--space-2); color: var(--gray-900); }
+    .product-stars { color: var(--secondary); font-size: 0.8rem; margin-bottom: var(--space-2); }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price { font-weight: 700; font-size: 1rem; }
+    .product-ship { font-size: 0.72rem; color: var(--gray-400); }
+    .product-seller { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--gray-100); }
+    .seller-avatar { width: 22px; height: 22px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; }
+    .seller-name { font-size: 0.75rem; color: var(--gray-500); }
+
+    /* How it works */
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+    .how-item { text-align: center; padding: var(--space-8) var(--space-6); background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-100); box-shadow: var(--shadow); }
+    .how-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--primary-50); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto var(--space-5); }
+    .how-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: var(--space-3); }
+    .how-desc { color: var(--gray-600); line-height: 1.7; font-size: 0.9rem; }
+
+    /* Testimonials */
+    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+    .testimonial-card { background: white; border-radius: var(--radius-lg); padding: var(--space-7); box-shadow: var(--shadow); border: 1px solid var(--gray-100); }
+    .testimonial-stars { color: var(--secondary); font-size: 1rem; margin-bottom: var(--space-4); letter-spacing: 2px; }
+    .testimonial-text { color: var(--gray-700); line-height: 1.75; margin-bottom: var(--space-5); font-size: 0.9rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: var(--space-3); }
+    .testimonial-av { width: 44px; height: 44px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+
+    /* CTA */
+    .cta-section { padding: var(--space-20) 0; background: linear-gradient(135deg, var(--gray-900) 0%, #1a2e5a 100%); color: white; text-align: center; }
+    .cta-section h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; margin-bottom: var(--space-4); }
+    .cta-section p { font-size: 1.1rem; color: rgba(255,255,255,0.7); max-width: 550px; margin: 0 auto var(--space-8); }
+    .cta-btns { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+
+    /* Footer */
+    footer { background: var(--gray-50); border-top: 1px solid var(--gray-200); padding: var(--space-16) 0 var(--space-8); }
+    .footer-grid { display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: var(--space-8); margin-bottom: var(--space-12); }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-4); }
+    .footer-desc { color: var(--gray-600); font-size: 0.875rem; line-height: 1.7; margin-bottom: var(--space-5); }
+    .footer-social { display: flex; gap: var(--space-3); }
+    .social-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--gray-200); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; transition: all var(--transition); color: var(--gray-600); }
+    .social-btn:hover { background: var(--primary); color: white; }
+    .footer-col h4 { font-weight: 700; margin-bottom: var(--space-4); font-size: 0.9rem; color: var(--gray-900); }
+    .footer-col ul { display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer-col a { color: var(--gray-500); font-size: 0.875rem; transition: color var(--transition); }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-bottom { padding-top: var(--space-8); border-top: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); }
+    .footer-copy { color: var(--gray-400); font-size: 0.82rem; }
+
+    /* Toast */
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: var(--radius-lg); background: white; box-shadow: var(--shadow-xl); border: 1px solid var(--gray-200); min-width: 300px; max-width: 420px; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--error); }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav-links, .nav-search, .desktop-only { display: none !important; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-books { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .how-grid, .testimonial-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .section-header { flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="nav-header">
+  <div class="container nav-inner">
+    <a href="/index.html" class="nav-logo">
+      <span>📚</span> BookMarket
+    </a>
+
+    <nav class="nav-links desktop-only">
+      <a href="/pages/ebooks.html">eBooks</a>
+      <a href="/pages/marketplace.html">Marketplace</a>
+      <a href="/pages/seller-dashboard.html">Sell</a>
+    </nav>
+
+    <div class="nav-search desktop-only">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="form-input global-search-input" placeholder="Search books, products...">
+    </div>
+
+    <div class="nav-actions">
+      <!-- Auth buttons (shown when logged out) -->
+      <div class="auth-buttons" style="display:flex; gap:var(--space-2); align-items:center;">
+        <a href="/pages/login.html" class="btn btn-ghost desktop-only">Log in</a>
+        <a href="/pages/register.html" class="btn btn-primary">Get Started</a>
+      </div>
+
+      <!-- User menu (shown when logged in) -->
+      <div class="user-menu user-dropdown" style="display:none;">
+        <button class="user-trigger" id="userTrigger">
+          <div class="user-avatar" id="userAvatarSmall">JD</div>
+          <span class="user-name desktop-only" id="userNameSmall">User</span>
+          <span style="font-size:0.7rem; color:var(--gray-400);">▼</span>
+        </button>
+
+        <div class="dropdown-panel" id="userDropdown">
+          <!-- Header with user info -->
+          <div class="dropdown-header">
+            <div class="dropdown-avatar-lg" id="dropdownAvatar">JD</div>
+            <div class="dropdown-user-info">
+              <div class="name" id="dropdownName">John Doe</div>
+              <div class="email" id="dropdownEmail">user@example.com</div>
+              <div class="role">👤 Member</div>
+            </div>
+          </div>
+
+          <!-- Quick stats -->
+          <div class="dropdown-stats">
+            <div class="dropdown-stat">
+              <div class="val">0</div>
+              <div class="lbl">Orders</div>
+            </div>
+            <div class="dropdown-stat">
+              <div class="val">0</div>
+              <div class="lbl">Books</div>
+            </div>
+            <div class="dropdown-stat">
+              <div class="val">0</div>
+              <div class="lbl">Wishlist</div>
+            </div>
+          </div>
+
+          <!-- Menu items -->
+          <div class="dropdown-menu-items">
+            <a href="/pages/dashboard.html" class="dropdown-item">
+              <div class="icon">🏠</div>
+              <div>
+                <div style="font-weight:600;">Dashboard</div>
+                <div style="font-size:0.75rem;color:var(--gray-400);">Overview & activity</div>
+              </div>
+            </a>
+            <a href="/pages/profile.html" class="dropdown-item">
+              <div class="icon">👤</div>
+              <div>
+                <div style="font-weight:600;">My Profile</div>
+                <div style="font-size:0.75rem;color:var(--gray-400);">Edit your details</div>
+              </div>
+            </a>
+            <a href="/pages/orders.html" class="dropdown-item">
+              <div class="icon">📦</div>
+              <div>
+                <div style="font-weight:600;">My Orders</div>
+                <div style="font-size:0.75rem;color:var(--gray-400);">Track purchases</div>
+              </div>
+            </a>
+            <a href="/pages/library.html" class="dropdown-item">
+              <div class="icon">📚</div>
+              <div>
+                <div style="font-weight:600;">My Library</div>
+                <div style="font-size:0.75rem;color:var(--gray-400);">Your eBooks</div>
+              </div>
+            </a>
+            <a href="/pages/seller-dashboard.html" class="dropdown-item">
+              <div class="icon">🏪</div>
+              <div>
+                <div style="font-weight:600;">Seller Dashboard</div>
+                <div style="font-size:0.75rem;color:var(--gray-400);">Manage your store</div>
+              </div>
+            </a>
+            <div class="dropdown-divider"></div>
+            <button onclick="window.auth && window.auth.logout()" class="dropdown-item danger">
+              <div class="icon" style="background:#fef2f2;">🚪</div>
+              <div style="font-weight:600;">Sign Out</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart -->
+      <a href="/pages/cart.html" class="cart-btn">
+        🛒
+        <span class="cart-count">0</span>
+      </a>
+
+      <!-- Mobile menu -->
+      <button onclick="toggleMobileMenu()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;padding:6px;" class="mobile-only">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div id="mobileMenu" style="display:none; position:fixed; inset:0; z-index:999; background:white; overflow-y:auto; padding: var(--space-6);">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-8);">
+    <span style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--primary);">📚 BookMarket</span>
+    <button onclick="toggleMobileMenu()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;">✕</button>
+  </div>
+  <nav style="display:flex;flex-direction:column;gap:var(--space-2);">
+    <a href="/index.html" style="padding:14px;border-radius:var(--radius);font-weight:600;color:var(--gray-700);display:flex;align-items:center;gap:12px;">🏠 Home</a>
+    <a href="/pages/ebooks.html" style="padding:14px;border-radius:var(--radius);font-weight:600;color:var(--gray-700);display:flex;align-items:center;gap:12px;">📖 eBooks</a>
+    <a href="/pages/marketplace.html" style="padding:14px;border-radius:var(--radius);font-weight:600;color:var(--gray-700);display:flex;align-items:center;gap:12px;">🛍️ Marketplace</a>
+    <div id="mobileAuthLinks">
+      <a href="/pages/login.html" style="padding:14px;border-radius:var(--radius);font-weight:600;color:var(--gray-700);display:flex;align-items:center;gap:12px;">🔑 Login</a>
+      <a href="/pages/register.html" style="padding:14px;border-radius:var(--radius);font-weight:600;color:var(--primary);display:flex;align-items:center;gap:12px;">📝 Register</a>
+    </div>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span>⭐</span> Trusted by 50,000+ readers worldwide
+        </div>
+        <h1>Discover, Buy & Sell <span>Digital Treasures</span></h1>
+        <p>The ultimate marketplace for eBooks, digital products, and unique finds. Join our community of readers, creators, and entrepreneurs.</p>
+        <div class="hero-ctas">
+          <a href="/pages/ebooks.html" class="btn btn-primary btn-lg">📖 Browse eBooks</a>
+          <a href="/pages/marketplace.html" class="btn btn-outline btn-lg">🛍️ Marketplace</a>
+        </div>
+        <div class="trust-badges">
+          <div class="trust-item"><span>✓</span> Secure Payments</div>
+          <div class="trust-item"><span>✓</span> Instant Delivery</div>
+          <div class="trust-item"><span>✓</span> 24/7 Support</div>
+        </div>
+      </div>
+      <div>
+        <div class="hero-books">
+          <div class="hero-book-card">
+            <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=200&fit=crop" alt="eBook">
+            <div class="hero-book-info">
+              <div class="hero-book-label">Bestseller</div>
+              <div class="hero-book-title">Digital Marketing</div>
+              <div class="hero-stars">★★★★★</div>
+              <div class="hero-price">$29.99</div>
+            </div>
+          </div>
+          <div class="hero-book-card">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=200&fit=crop" alt="Product">
+            <div class="hero-book-info">
+              <div class="hero-book-label" style="color:var(--secondary);">Trending</div>
+              <div class="hero-book-title">Vintage Typewriter</div>
+              <div class="hero-stars">★★★★★</div>
+              <div class="hero-price">$149.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-num counter" data-target="50000">0</div>
+        <div class="stat-label">Active Readers</div>
+      </div>
+      <div>
+        <div class="stat-num counter" data-target="25000">0</div>
+        <div class="stat-label">eBooks Available</div>
+      </div>
+      <div>
+        <div class="stat-num counter" data-target="12000">0</div>
+        <div class="stat-label">Verified Sellers</div>
+      </div>
+      <div>
+        <div class="stat-num counter" data-target="98">0</div>
+        <div class="stat-label">% Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED EBOOKS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Featured eBooks</h2>
+        <p class="section-sub">Handpicked selections from our digital library</p>
+      </div>
+      <a href="/pages/ebooks.html" class="btn btn-outline">View All →</a>
+    </div>
+
+    <div style="position:relative;">
+      <div class="carousel-wrapper" id="ebookCarousel">
+        <div class="carousel-track" id="ebookTrack">
+          <!-- Card 1 -->
+          <div class="carousel-slide">
+            <div class="book-card">
+              <div class="book-img">
+                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=400&fit=crop" alt="Book">
+                <button class="book-wishlist" onclick="toggleWishlist(1)">🤍</button>
+                <div class="book-badge"><span class="badge badge-primary">-40%</span></div>
+              </div>
+              <div class="book-body">
+                <div class="book-genre">Business & Marketing</div>
+                <div class="book-title">The Art of Digital Marketing</div>
+                <div class="book-author">Sarah Johnson</div>
+                <div class="book-footer">
+                  <div><span class="book-price">$29.99</span><span class="book-price-old">$49.99</span></div>
+                  <button onclick="addToCart(1,'ebook')" class="btn btn-primary btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="carousel-slide">
+            <div class="book-card">
+              <div class="book-img">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop" alt="Book">
+                <button class="book-wishlist" onclick="toggleWishlist(2)">🤍</button>
+              </div>
+              <div class="book-body">
+                <div class="book-genre">Technology</div>
+                <div class="book-title">Python for Data Science</div>
+                <div class="book-author">Michael Chen</div>
+                <div class="book-footer">
+                  <span class="book-price">$34.99</span>
+                  <button onclick="addToCart(2,'ebook')" class="btn btn-primary btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="carousel-slide">
+            <div class="book-card">
+              <div class="book-img">
+                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&h=400&fit=crop" alt="Book">
+                <button class="book-wishlist" onclick="toggleWishlist(3)">🤍</button>
+                <div class="book-badge"><span class="badge badge-success">NEW</span></div>
+              </div>
+              <div class="book-body">
+                <div class="book-genre">Fiction</div>
+                <div class="book-title">The Midnight Library</div>
+                <div class="book-author">Emma Williams</div>
+                <div class="book-footer">
+                  <span class="book-price">$14.99</span>
+                  <button onclick="addToCart(3,'ebook')" class="btn btn-primary btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="carousel-slide">
+            <div class="book-card">
+              <div class="book-img">
+                <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=400&fit=crop" alt="Book">
+                <button class="book-wishlist" onclick="toggleWishlist(4)">🤍</button>
+              </div>
+              <div class="book-body">
+                <div class="book-genre">Self-Help</div>
+                <div class="book-title">Atomic Habits</div>
+                <div class="book-author">James Clear</div>
+                <div class="book-footer">
+                  <span class="book-price">$19.99</span>
+                  <button onclick="addToCart(4,'ebook')" class="btn btn-primary btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 5 -->
+          <div class="carousel-slide">
+            <div class="book-card">
+              <div class="book-img">
+                <img src="https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=400&h=400&fit=crop" alt="Book">
+                <button class="book-wishlist" onclick="toggleWishlist(5)">🤍</button>
+              </div>
+              <div class="book-body">
+                <div class="book-genre">Science</div>
+                <div class="book-title">A Brief History of Time</div>
+                <div class="book-author">Stephen Hawking</div>
+                <div class="book-footer">
+                  <span class="book-price">$12.99</span>
+                  <button onclick="addToCart(5,'ebook')" class="btn btn-primary btn-sm">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-btn carousel-prev" id="ebookPrev">←</button>
+      <button class="carousel-btn carousel-next" id="ebookNext">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- TRENDING PRODUCTS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Trending Products</h2>
+        <p class="section-sub">Unique finds from our verified sellers</p>
+      </div>
+      <a href="/pages/marketplace.html" class="btn btn-outline">Explore All →</a>
+    </div>
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&h=280&fit=crop" alt="Product">
+          <div style="position:absolute;top:12px;left:12px;"><span class="badge badge-verified">✓ Verified</span></div>
+        </div>
+        <div class="product-body">
+          <div class="product-title">Vintage Leather Journal</div>
+          <div class="product-stars">★★★★★ <span style="color:var(--gray-400);font-size:0.75rem;">(23)</span></div>
+          <div class="product-footer">
+            <span class="product-price">$45.00</span>
+            <span class="product-ship">Free Shipping</span>
+          </div>
+          <div class="product-seller">
+            <div class="seller-avatar" style="background:var(--primary);">SC</div>
+            <span class="seller-name">Sarah's Crafts</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=280&fit=crop" alt="Product">
+        </div>
+        <div class="product-body">
+          <div class="product-title">Minimalist Watch</div>
+          <div class="product-stars">★★★★☆ <span style="color:var(--gray-400);font-size:0.75rem;">(56)</span></div>
+          <div class="product-footer">
+            <span class="product-price">$89.99</span>
+            <span class="product-ship">$5 Shipping</span>
+          </div>
+          <div class="product-seller">
+            <div class="seller-avatar" style="background:var(--secondary);">TW</div>
+            <span class="seller-name">TimeWorks</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=280&fit=crop" alt="Product">
+          <div style="position:absolute;top:12px;left:12px;"><span class="badge badge-primary">SALE</span></div>
+        </div>
+        <div class="product-body">
+          <div class="product-title">Premium Headphones</div>
+          <div class="product-stars">★★★★★ <span style="color:var(--gray-400);font-size:0.75rem;">(128)</span></div>
+          <div class="product-footer">
+            <div><span class="product-price">$199.00</span> <span style="font-size:0.8rem;color:var(--gray-400);text-decoration:line-through;">$249</span></div>
+          </div>
+          <div class="product-seller">
+            <div class="seller-avatar" style="background:var(--success);">AS</div>
+            <span class="seller-name">AudioStore</span>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=280&fit=crop" alt="Product">
+          <div style="position:absolute;top:12px;left:12px;"><span class="badge badge-verified">✓ Verified</span></div>
+        </div>
+        <div class="product-body">
+          <div class="product-title">Polaroid Camera</div>
+          <div class="product-stars">★★★★★ <span style="color:var(--gray-400);font-size:0.75rem;">(89)</span></div>
+          <div class="product-footer">
+            <span class="product-price">$129.00</span>
+            <span class="product-ship">Free Shipping</span>
+          </div>
+          <div class="product-seller">
+            <div class="seller-avatar" style="background:var(--error);">VP</div>
+            <span class="seller-name">Vintage Pixels</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="container">
+    <div style="text-align:center;max-width:560px;margin:0 auto var(--space-12);">
+      <h2 class="section-title">How It Works</h2>
+      <p style="color:var(--gray-500);font-size:0.95rem;margin-top:var(--space-2);">Get started in minutes — whether you're buying or selling.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-icon">🔍</div>
+        <h3 class="how-title">1. Browse & Discover</h3>
+        <p class="how-desc">Explore thousands of eBooks and products from verified sellers worldwide with smart filters and recommendations.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-icon">🛒</div>
+        <h3 class="how-title">2. Purchase Securely</h3>
+        <p class="how-desc">Multiple payment options with full buyer protection. Digital products delivered instantly to your library.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-icon">⭐</div>
+        <h3 class="how-title">3. Enjoy & Review</h3>
+        <p class="how-desc">Read on any device, rate your experience, and help others discover great content in our community.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section section-alt">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:var(--space-10);">
+      <h2 class="section-title">What Our Community Says</h2>
+      <p style="color:var(--gray-500);margin-top:var(--space-2);">Join thousands of satisfied readers and sellers</p>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The best platform for finding rare eBooks. The reading interface is smooth, and I love the instant delivery. Highly recommend!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-av" style="background:var(--primary);">JD</div>
+          <div>
+            <div style="font-weight:700;font-size:0.9rem;">Jennifer Davis</div>
+            <div style="font-size:0.8rem;color:var(--gray-400);">Avid Reader</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"As a seller, I've tripled my revenue since joining. The seller tools are intuitive, and the support team is fantastic."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-av" style="background:var(--secondary);">MR</div>
+          <div>
+            <div style="font-weight:700;font-size:0.9rem;">Michael Rodriguez</div>
+            <div style="font-size:0.8rem;color:var(--gray-400);">Verified Seller</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Incredible marketplace with unique products I couldn't find anywhere else. The verification system gives me full confidence."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-av" style="background:var(--success);">SK</div>
+          <div>
+            <div style="font-weight:700;font-size:0.9rem;">Sarah Kim</div>
+            <div style="font-size:0.8rem;color:var(--gray-400);">Product Collector</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to Get Started?</h2>
+    <p>Join our growing community today. Whether you're here to read, buy, or sell — your journey starts here.</p>
+    <div class="cta-btns">
+      <a href="/pages/register.html" class="btn btn-lg" style="background:white;color:var(--gray-900);font-weight:700;">Create Free Account</a>
+      <a href="/pages/ebooks.html" class="btn btn-lg btn-outline" style="border-color:rgba(255,255,255,0.4);color:white;">Browse eBooks</a>
+    </div>
+    <p style="margin-top:var(--space-5);color:rgba(255,255,255,0.4);font-size:0.82rem;">No credit card required. Cancel anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">📚 BookMarket</div>
+        <p class="footer-desc">The premier destination for eBooks and digital products. Connecting readers, creators, and entrepreneurs worldwide.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn">f</a>
+          <a href="#" class="social-btn">t</a>
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">ig</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>eBooks</h4>
+        <ul>
+          <li><a href="/pages/ebooks.html">Bestsellers</a></li>
+          <li><a href="/pages/ebooks.html">New Arrivals</a></li>
+          <li><a href="/pages/ebooks.html">Categories</a></li>
+          <li><a href="/pages/ebooks.html">Free eBooks</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Marketplace</h4>
+        <ul>
+          <li><a href="/pages/marketplace.html">All Products</a></li>
+          <li><a href="/pages/marketplace.html">Featured Sellers</a></li>
+          <li><a href="/pages/seller-dashboard.html">Start Selling</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2024 BookMarket. All rights reserved.</p>
+      <div style="display:flex;gap:var(--space-2);color:var(--gray-400);font-size:0.8rem;align-items:center;">
+        💳 Visa &nbsp;·&nbsp; Mastercard &nbsp;·&nbsp; PayPal &nbsp;·&nbsp; Stripe
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/js/utils.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/main.js"></script>
+<script>
+  // Carousel
+  (function() {
+    const track = document.getElementById('ebookTrack');
+    const slides = track.querySelectorAll('.carousel-slide');
+    const slideWidth = () => slides[0].offsetWidth + 20; // gap
+    let index = 0;
+    const max = slides.length - Math.floor(document.getElementById('ebookCarousel').offsetWidth / slideWidth());
+
+    document.getElementById('ebookNext').addEventListener('click', () => {
+      index = Math.min(index + 1, slides.length - 1);
+      track.style.transform = `translateX(-${index * slideWidth()}px)`;
+    });
+    document.getElementById('ebookPrev').addEventListener('click', () => {
+      index = Math.max(index - 1, 0);
+      track.style.transform = `translateX(-${index * slideWidth()}px)`;
+    });
+  })();
+
+  // Counters
+  document.querySelectorAll('.counter').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        let cur = 0;
+        const step = target / 80;
+        const t = setInterval(() => {
+          cur = Math.min(cur + step, target);
+          el.textContent = Math.floor(cur).toLocaleString() + (target === 98 ? '' : '+');
+          if (cur >= target) clearInterval(t);
+        }, 20);
+        obs.unobserve(el);
+      }
+    }, { threshold: 0.5 });
+    obs.observe(el);
+  });
+
+  // User dropdown toggle
+  const trigger = document.getElementById('userTrigger');
+  const panel = document.getElementById('userDropdown');
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      panel.classList.toggle('open');
+    });
+    document.addEventListener('click', () => panel.classList.remove('open'));
+    panel.addEventListener('click', e => e.stopPropagation());
+  }
+
+  // Mobile menu
+  function toggleMobileMenu() {
+    const m = document.getElementById('mobileMenu');
+    m.style.display = m.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Cart
+  window.addToCart = function(id, type) {
+    const count = document.querySelector('.cart-count');
+    if (count) count.textContent = parseInt(count.textContent || 0) + 1;
+    showToast('Added to cart! 🛒', 'success');
+  };
+  window.toggleWishlist = function(id) { showToast('Added to wishlist ❤️', 'info'); };
+
+  function showToast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span>${type === 'success' ? '✓' : 'ℹ'}</span><span style="flex:1">${msg}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--gray-400);">×</button>`;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+</script>
+</body>
+</html>

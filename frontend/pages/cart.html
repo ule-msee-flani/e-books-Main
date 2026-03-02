@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — BookMarket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:#1a56db;--primary-dark:#1342b0;--primary-50:#eff6ff;
+      --secondary:#f59e0b;--success:#10b981;--error:#ef4444;
+      --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;
+      --gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;
+      --gray-800:#1f2937;--gray-900:#111827;
+      --font-display:'Playfair Display',Georgia,serif;--font-body:'DM Sans',system-ui,sans-serif;
+      --radius:8px;--radius-lg:16px;--radius-full:9999px;
+      --shadow:0 1px 3px rgba(0,0,0,.1);--shadow-md:0 4px 6px rgba(0,0,0,.07);
+      --shadow-lg:0 10px 15px rgba(0,0,0,.1);--shadow-xl:0 20px 25px rgba(0,0,0,.1);
+      --header-height:68px;--transition:.2s ease;
+    }
+    [data-theme="dark"] { --gray-50:#18181b;--gray-100:#27272a;--gray-200:#3f3f46;--gray-300:#52525b;--gray-400:#71717a;--gray-500:#a1a1aa;--gray-600:#d4d4d8;--gray-700:#e4e4e7;--gray-800:#f4f4f5;--gray-900:#fafafa; }
+    body { font-family:var(--font-body);color:var(--gray-800);background:#fff;padding-top:var(--header-height); }
+    [data-theme="dark"] body { background:#111113; }
+    a { text-decoration:none;color:inherit; }
+    img { max-width:100%;display:block; }
+    button { font-family:inherit;cursor:pointer; }
+    .container { max-width:1200px;margin:0 auto;padding:0 24px; }
+
+    /* NAV */
+    .nav-header { position:fixed;top:0;left:0;right:0;height:var(--header-height);background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-200);z-index:1000; }
+    [data-theme="dark"] .nav-header { background:rgba(17,17,19,.97); }
+    .nav-inner { max-width:1200px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:24px; }
+    .nav-logo { display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--primary); }
+    .nav-links { display:flex;align-items:center;gap:32px;margin-left:auto; }
+    .nav-link { font-weight:500;color:var(--gray-600);font-size:.9375rem;transition:color var(--transition); }
+    .nav-link:hover,.nav-link.active { color:var(--primary); }
+    .nav-actions { display:flex;align-items:center;gap:10px; }
+    .btn { display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:var(--radius);font-weight:600;font-size:.9375rem;border:2px solid transparent;transition:all var(--transition);cursor:pointer;font-family:var(--font-body); }
+    .btn-sm { padding:6px 14px;font-size:.8125rem; }
+    .btn-full { width:100%;justify-content:center; }
+    .btn-lg { padding:14px 28px;font-size:1rem; }
+    .btn-primary { background:var(--primary);color:#fff;border-color:var(--primary); }
+    .btn-primary:hover { background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,86,219,.35); }
+    .btn-ghost { background:transparent;color:var(--gray-700); }
+    .btn-ghost:hover { background:var(--gray-100); }
+    .btn-outline { background:transparent;color:var(--primary);border-color:var(--primary); }
+    .btn-outline:hover { background:var(--primary);color:#fff; }
+    .btn-danger { background:transparent;color:var(--error);border:none;padding:4px 8px; }
+    .btn-danger:hover { background:#fef2f2; }
+    .avatar-circle { width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center; }
+    .user-avatar-btn { display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:none;background:var(--gray-100);border-radius:var(--radius-full); }
+    .user-menu { position:relative; }
+    .user-dropdown { position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);min-width:248px;border:1px solid var(--gray-200);opacity:0;transform:translateY(-8px) scale(.97);pointer-events:none;transition:all .15s ease;z-index:100; }
+    [data-theme="dark"] .user-dropdown { background:#1f2937; }
+    .user-dropdown.open { opacity:1;transform:translateY(0) scale(1);pointer-events:all; }
+    .dropdown-header { display:flex;align-items:center;gap:12px;padding:16px; }
+    .dropdown-avatar { width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;font-size:.875rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+    .dropdown-divider { border:none;border-top:1px solid var(--gray-200);margin:4px 0; }
+    .dropdown-item { display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:.875rem;color:var(--gray-700);transition:background var(--transition);width:100%;border:none;background:none;text-align:left; }
+    .dropdown-item:hover { background:var(--gray-50);color:var(--primary); }
+    .dropdown-logout { color:var(--error)!important; }
+    .dropdown-logout:hover { background:#fef2f2!important; }
+
+    /* CART PAGE */
+    .page-hero { background:var(--gray-50);padding:40px 0;border-bottom:1px solid var(--gray-200); }
+    [data-theme="dark"] .page-hero { background:#18181b; }
+    .page-hero-title { font-family:var(--font-display);font-size:2rem;font-weight:900; }
+
+    .cart-layout { display:grid;grid-template-columns:1fr 360px;gap:32px;padding:40px 0 80px; }
+
+    /* CART ITEMS */
+    .cart-items-wrap { display:flex;flex-direction:column;gap:0; }
+    .cart-header-row { display:grid;grid-template-columns:1fr 120px 120px 48px;gap:16px;padding:0 16px 12px;font-size:.8125rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--gray-200); }
+    .cart-item { display:grid;grid-template-columns:1fr 120px 120px 48px;gap:16px;align-items:center;padding:20px 16px;border-bottom:1px solid var(--gray-100);transition:background var(--transition); }
+    [data-theme="dark"] .cart-item { border-color:var(--gray-200); }
+    .cart-item:hover { background:var(--gray-50); }
+    [data-theme="dark"] .cart-item:hover { background:#1f2937; }
+    .cart-item-info { display:flex;align-items:center;gap:16px; }
+    .cart-item-img { width:72px;height:90px;border-radius:var(--radius);object-fit:cover;flex-shrink:0; }
+    .cart-item-title { font-weight:600;font-size:.9375rem;margin-bottom:4px; }
+    .cart-item-meta { font-size:.8125rem;color:var(--gray-500); }
+    .cart-item-type { display:inline-block;padding:2px 8px;border-radius:var(--radius-full);background:var(--primary-50);color:var(--primary);font-size:.7rem;font-weight:600;margin-top:4px; }
+    .qty-ctrl { display:flex;align-items:center;gap:6px; }
+    .qty-btn { width:28px;height:28px;border-radius:6px;border:1px solid var(--gray-200);background:#fff;font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition); }
+    [data-theme="dark"] .qty-btn { background:#1f2937;border-color:var(--gray-200);color:var(--gray-800); }
+    .qty-btn:hover { background:var(--primary);color:#fff;border-color:var(--primary); }
+    .qty-value { font-weight:600;min-width:24px;text-align:center; }
+    .item-price { font-weight:700;font-size:1rem;color:var(--primary); }
+
+    /* EMPTY CART */
+    .empty-cart { text-align:center;padding:80px 40px; }
+    .empty-icon { font-size:4rem;margin-bottom:16px; }
+    .empty-title { font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:8px; }
+    .empty-sub { color:var(--gray-500);margin-bottom:28px; }
+
+    /* SUMMARY */
+    .cart-summary { background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:24px;position:sticky;top:calc(var(--header-height)+20px);align-self:start; }
+    [data-theme="dark"] .cart-summary { background:#1f2937;border-color:var(--gray-200); }
+    .summary-title { font-family:var(--font-display);font-size:1.25rem;font-weight:700;margin-bottom:20px; }
+    .summary-row { display:flex;justify-content:space-between;font-size:.9375rem;margin-bottom:12px;color:var(--gray-600); }
+    .summary-row.total { font-weight:700;font-size:1.0625rem;color:var(--gray-900);margin-top:16px;padding-top:16px;border-top:2px solid var(--gray-200); }
+    [data-theme="dark"] .summary-row { color:var(--gray-500); }
+    [data-theme="dark"] .summary-row.total { color:var(--gray-800); }
+    .promo-input { display:flex;gap:8px;margin:20px 0; }
+    .promo-input input { flex:1;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:var(--font-body);font-size:.875rem; }
+    [data-theme="dark"] .promo-input input { background:#111113;color:var(--gray-800);border-color:var(--gray-200); }
+    .promo-input input:focus { outline:none;border-color:var(--primary); }
+    .secure-note { display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--gray-500);margin-top:14px;justify-content:center; }
+    .continue-link { text-align:center;margin-top:14px; }
+    .continue-link a { font-size:.875rem;color:var(--primary);font-weight:500; }
+
+    /* TOAST */
+    .toast-container { position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:360px; }
+    @keyframes slideInToast { from { transform:translateX(110%);opacity:0; } to { transform:translateX(0);opacity:1; } }
+
+    /* MOBILE MENU */
+    .mobile-menu { position:fixed;inset:0;background:#fff;z-index:2000;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;padding:24px; }
+    [data-theme="dark"] .mobile-menu { background:#18181b; }
+    .mobile-menu.active { transform:translateX(0); }
+    .mobile-menu-item { display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius);font-weight:500;color:var(--gray-700);transition:background var(--transition);font-size:1rem;width:100%;border:none;background:none;text-align:left; }
+    .mobile-menu-item:hover { background:var(--gray-100);color:var(--primary); }
+
+    @media (max-width:768px) { .cart-layout { grid-template-columns:1fr; } .cart-header-row { display:none; } .cart-item { grid-template-columns:1fr auto;gap:12px; } .desktop-only { display:none!important; } }
+    @media (min-width:769px) { .mobile-only { display:none!important; } }
+  </style>
+</head>
+<body>
+
+  <header class="nav-header">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo"><span style="font-size:1.8rem">📚</span><span>BookMarket</span></a>
+      <nav class="nav-links desktop-only">
+        <a href="/pages/ebooks.html" class="nav-link">eBooks</a>
+        <a href="/pages/marketplace.html" class="nav-link">Marketplace</a>
+        <a href="/pages/cart.html" class="nav-link active" style="display:flex;align-items:center;gap:6px">🛒 <span style="background:var(--primary);color:#fff;font-size:.7rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px" class="cart-count">0</span></a>
+      </nav>
+      <div class="nav-actions">
+        <button class="desktop-only" onclick="toggleTheme()" style="background:var(--gray-100);border:none;border-radius:var(--radius-full);padding:7px 14px;cursor:pointer;font-size:.875rem;font-weight:500;color:var(--gray-700)" id="themeBtn">🌙 Dark</button>
+        <div class="auth-buttons" style="display:flex;gap:8px">
+          <a href="/pages/login.html" class="btn btn-ghost desktop-only">Log in</a>
+          <a href="/pages/register.html" class="btn btn-primary">Get Started</a>
+        </div>
+        <div class="user-menu" style="display:none">
+          <button class="user-avatar-btn" id="userMenuBtn">
+            <div class="avatar-circle user-avatar">JD</div>
+            <span class="desktop-only" style="font-weight:500;font-size:.875rem;color:var(--gray-700)" id="navUserName">User</span>
+            <span style="font-size:.625rem;color:var(--gray-500)">▾</span>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar user-avatar" id="dropAvatar">JD</div>
+              <div>
+                <div style="font-weight:600;font-size:.9375rem" id="dropName">User</div>
+                <div style="font-size:.75rem;color:var(--gray-500)" id="dropEmail">user@email.com</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="/pages/cart.html" class="dropdown-item">🛒 My Cart</a>
+            <a href="#" class="dropdown-item">📦 My Orders</a>
+            <a href="#" class="dropdown-item">❤️ Wishlist</a>
+            <a href="#" class="dropdown-item">⚙️ Account Settings</a>
+            <div class="dropdown-divider"></div>
+            <button onclick="window.auth && window.auth.logout()" class="dropdown-item dropdown-logout">🚪 Logout</button>
+          </div>
+        </div>
+        <button class="mobile-only" onclick="document.getElementById('mobileMenu').classList.add('active');document.body.style.overflow='hidden'" style="background:none;border:none;font-size:1.5rem;padding:4px">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+      <a href="/index.html" class="nav-logo">📚 BookMarket</a>
+      <button onclick="document.getElementById('mobileMenu').classList.remove('active');document.body.style.overflow=''" style="background:none;border:none;font-size:1.5rem;cursor:pointer">✕</button>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:4px">
+      <a href="/index.html" class="mobile-menu-item">🏠 Home</a>
+      <a href="/pages/ebooks.html" class="mobile-menu-item">📖 eBooks</a>
+      <a href="/pages/marketplace.html" class="mobile-menu-item">🛍️ Marketplace</a>
+      <a href="/pages/cart.html" class="mobile-menu-item">🛒 Cart</a>
+      <a href="/pages/login.html" class="mobile-menu-item">🔑 Login</a>
+      <a href="/pages/register.html" class="mobile-menu-item">📝 Register</a>
+    </nav>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1 class="page-hero-title">🛒 Shopping Cart</h1>
+      <p style="color:var(--gray-500);margin-top:6px" id="cartSubtitle">0 items in your cart</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="cart-layout" style="padding:40px 0 80px">
+
+      <div>
+        <div class="cart-header-row">
+          <span>Product</span>
+          <span>Quantity</span>
+          <span>Price</span>
+          <span></span>
+        </div>
+        <div id="cartItems"></div>
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-title">Order Summary</div>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+        <div class="summary-row"><span>Shipping</span><span style="color:var(--success)">Free</span></div>
+        <div class="summary-row"><span>Tax (10%)</span><span id="tax">$0.00</span></div>
+        <div class="summary-row total"><span>Total</span><span id="total">$0.00</span></div>
+        <div class="promo-input">
+          <input type="text" placeholder="Promo code" id="promoInput">
+          <button class="btn btn-outline btn-sm" onclick="applyPromo()">Apply</button>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="checkout()">Proceed to Checkout →</button>
+        <div class="secure-note">🔒 Secure checkout with SSL encryption</div>
+        <div class="continue-link"><a href="/index.html">← Continue Shopping</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/auth.js"></script>
+
+  <script>
+    (function() { const s = localStorage.getItem('bm_theme'); if (s==='dark') document.documentElement.setAttribute('data-theme','dark'); })();
+    function toggleTheme() { const d = document.documentElement.getAttribute('data-theme')==='dark'; document.documentElement.setAttribute('data-theme',d?'light':'dark'); localStorage.setItem('bm_theme',d?'light':'dark'); document.getElementById('themeBtn').textContent = d?'🌙 Dark':'☀️ Light'; }
+
+    document.getElementById('userMenuBtn') && document.getElementById('userMenuBtn').addEventListener('click', e => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('open'); });
+    document.addEventListener('click', () => { const d=document.getElementById('userDropdown'); if(d) d.classList.remove('open'); });
+
+    function syncAuthUI() {
+      try {
+        const stored=localStorage.getItem('user'); const user=stored?JSON.parse(stored).value:null;
+        const token=localStorage.getItem('access_token'); const hasAuth=!!(token&&user);
+        document.querySelectorAll('.auth-buttons').forEach(el=>el.style.display=hasAuth?'none':'flex');
+        document.querySelectorAll('.user-menu').forEach(el=>el.style.display=hasAuth?'block':'none');
+        if(hasAuth&&user){
+          const fullName=user.full_name||`${user.first_name||''} ${user.last_name||''}`.trim()||'User';
+          const initials=fullName.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+          document.querySelectorAll('.user-avatar').forEach(el=>el.textContent=initials);
+          const nn=document.getElementById('navUserName'); if(nn) nn.textContent=fullName;
+          const dn=document.getElementById('dropName'); if(dn) dn.textContent=fullName;
+          const de=document.getElementById('dropEmail'); if(de&&user.email) de.textContent=user.email;
+          const da=document.getElementById('dropAvatar'); if(da) da.textContent=initials;
+        }
+      } catch(e) {}
+    }
+    syncAuthUI();
+
+    // Sample cart items
+    let cartItems = [
+      { id:1, title:'The Art of Digital Marketing', author:'Sarah Johnson', type:'eBook', price:29.99, qty:1, img:'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=120&h=150&fit=crop' },
+      { id:2, title:'Premium Headphones', author:'AudioStore', type:'Product', price:199.00, qty:1, img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=120&h=150&fit=crop' },
+    ];
+
+    function renderCart() {
+      const container = document.getElementById('cartItems');
+      const subtitle = document.getElementById('cartSubtitle');
+
+      if (!cartItems.length) {
+        container.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-icon">🛒</div>
+            <div class="empty-title">Your cart is empty</div>
+            <p class="empty-sub">Discover amazing eBooks and products in our marketplace.</p>
+            <a href="/index.html" class="btn btn-primary btn-lg">Start Shopping</a>
+          </div>`;
+        subtitle.textContent = '0 items in your cart';
+        updateTotals();
+        return;
+      }
+
+      subtitle.textContent = `${cartItems.length} item${cartItems.length > 1 ? 's' : ''} in your cart`;
+      container.innerHTML = cartItems.map(item => `
+        <div class="cart-item" id="item-${item.id}">
+          <div class="cart-item-info">
+            <img class="cart-item-img" src="${item.img}" alt="${item.title}">
+            <div>
+              <div class="cart-item-title">${item.title}</div>
+              <div class="cart-item-meta">${item.author}</div>
+              <span class="cart-item-type">${item.type}</span>
+            </div>
+          </div>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+            <span class="qty-value">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+          </div>
+          <div class="item-price">$${(item.price * item.qty).toFixed(2)}</div>
+          <button class="btn-danger" onclick="removeItem(${item.id})" title="Remove">✕</button>
+        </div>
+      `).join('');
+      updateTotals();
+    }
+
+    function changeQty(id, delta) {
+      const item = cartItems.find(i => i.id === id);
+      if (!item) return;
+      item.qty = Math.max(1, item.qty + delta);
+      renderCart();
+    }
+
+    function removeItem(id) {
+      cartItems = cartItems.filter(i => i.id !== id);
+      renderCart();
+      showToast('Item removed from cart', 'info');
+    }
+
+    function updateTotals() {
+      const subtotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+      const tax = subtotal * 0.1;
+      const total = subtotal + tax;
+      document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+      document.querySelectorAll('.cart-count').forEach(el => el.textContent = cartItems.reduce((s,i) => s + i.qty, 0));
+    }
+
+    function applyPromo() {
+      const code = document.getElementById('promoInput').value.trim().toUpperCase();
+      if (code === 'SAVE10') showToast('Promo applied! 10% off 🎉', 'success');
+      else showToast('Invalid promo code', 'error');
+    }
+
+    function checkout() {
+      if (!cartItems.length) { showToast('Your cart is empty', 'error'); return; }
+      showToast('Checkout coming soon! 🚀', 'info');
+    }
+
+    function showToast(msg, type='info') {
+      const colors={success:'var(--success)',error:'var(--error)',info:'var(--primary)',warning:'var(--warning)'};
+      const icons={success:'✓',error:'✕',info:'ℹ',warning:'⚠'};
+      const t=document.createElement('div');
+      t.style.cssText=`display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;box-shadow:0 20px 25px rgba(0,0,0,.1);border-left:4px solid ${colors[type]};animation:slideInToast .3s ease;font-size:.875rem;font-family:var(--font-body)`;
+      t.innerHTML=`<span style="color:${colors[type]}">${icons[type]}</span><span style="flex:1">${msg}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--gray-400)">×</button>`;
+      document.getElementById('toastContainer').appendChild(t);
+      setTimeout(()=>{if(t.parentElement){t.style.animation='slideInToast .3s ease reverse';setTimeout(()=>t.remove(),300);}},3000);
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

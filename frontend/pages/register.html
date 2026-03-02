@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - BookMarket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/dark-mode.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .auth-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-12);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .auth-form-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-12);
+      background: white;
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+    
+    .progress-steps {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-8);
+    }
+    
+    .step {
+      flex: 1;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: var(--radius-full);
+      transition: background var(--transition);
+    }
+    
+    .step.active {
+      background: var(--primary);
+    }
+    
+    @media (max-width: 768px) {
+      .auth-page {
+        grid-template-columns: 1fr;
+      }
+      .auth-hero {
+        display: none;
+      }
+      .auth-form-container {
+        max-height: none;
+        padding: var(--space-6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <!-- Hero Side -->
+    <div class="auth-hero">
+      <div style="position: relative; z-index: 1; max-width: 480px;">
+        <a href="/" style="display: flex; align-items: center; gap: var(--space-2); font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: var(--space-8);">
+          <span style="font-size: 2rem;">📚</span>
+          <span>BookMarket</span>
+        </a>
+        
+        <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: var(--space-6); line-height: 1.2;">Start your journey today</h1>
+        <p style="font-size: 1.25rem; opacity: 0.9; line-height: 1.6; margin-bottom: var(--space-8);">Join thousands of readers and sellers. Discover new worlds, share your creations, and build your digital empire.</p>
+        
+        <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: var(--space-6); border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.2);">
+          <p style="font-style: italic; margin-bottom: var(--space-4);">"BookMarket transformed how I share my writing. The platform is intuitive and the community is amazing!"</p>
+          <div style="display: flex; align-items: center; gap: var(--space-3);">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; font-weight: 600;">EW</div>
+            <div>
+              <div style="font-weight: 600;">Emma Wilson</div>
+              <div style="font-size: 0.875rem; opacity: 0.8;">Bestselling Author</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Form Side -->
+    <div class="auth-form-container">
+      <div style="max-width: 480px; width: 100%; margin: 0 auto;">
+        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-2);">Create your account</h2>
+        <p style="color: var(--gray-600); margin-bottom: var(--space-8);">Already have an account? <a href="/pages/login.html" style="color: var(--primary); font-weight: 600;">Sign in</a></p>
+        
+        <!-- Registration Form -->
+        <form id="register-form">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" name="firstName" class="form-input" placeholder="John" data-validate="required" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" name="lastName" class="form-input" placeholder="Doe" data-validate="required" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-input" placeholder="you@example.com" data-validate="required,email" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Phone Number (optional)</label>
+            <input type="tel" name="phone" class="form-input" placeholder="+1 (555) 123-4567" data-validate="phone">
+            <p class="form-hint">Used for account security and order updates</p>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-input" placeholder="Create a strong password" data-validate="required,password" required>
+            <div style="margin-top: var(--space-2);">
+              <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-2);">
+                <span id="pwd-length" style="font-size: 0.75rem; color: var(--gray-400);">• 8+ characters</span>
+                <span id="pwd-upper" style="font-size: 0.75rem; color: var(--gray-400);">• Uppercase</span>
+                <span id="pwd-lower" style="font-size: 0.75rem; color: var(--gray-400);">• Lowercase</span>
+                <span id="pwd-number" style="font-size: 0.75rem; color: var(--gray-400);">• Number</span>
+              </div>
+              <div style="height: 4px; background: var(--gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                <div id="pwd-strength" style="height: 100%; width: 0; background: var(--error); transition: all var(--transition);"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" name="confirmPassword" class="form-input" placeholder="Repeat your password" data-validate="required" required>
+          </div>
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer; font-size: 0.875rem; color: var(--gray-600);">
+              <input type="checkbox" name="terms" required style="margin-top: 2px; width: 16px; height: 16px; accent-color: var(--primary);">
+              <span>I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a>, <a href="#" style="color: var(--primary);">Privacy Policy</a>, and <a href="#" style="color: var(--primary);">Seller Agreement</a></span>
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: var(--space-3); cursor: pointer; font-size: 0.875rem; color: var(--gray-600);">
+              <input type="checkbox" name="newsletter" style="width: 16px; height: 16px; accent-color: var(--primary);">
+              <span>Send me occasional emails about new features and promotions</span>
+            </label>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-full" data-original-text="Create Account" style="margin-bottom: var(--space-4);">
+            Create Account
+          </button>
+        </form>
+        
+        <p style="text-align: center; font-size: 0.875rem; color: var(--gray-500);">
+          Protected by reCAPTCHA and subject to our Privacy Policy
+        </p>
+      </div>
+    </div>
+  </div>
+<script src="../js/utils.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/auth.js"></script>
+  
+  <script>
+    // Password strength indicator
+    const passwordInput = document.querySelector('[name="password"]');
+    const strengthBar = document.getElementById('pwd-strength');
+    
+    passwordInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      let strength = 0;
+      
+      if (val.length >= 8) strength += 25;
+      if (/[A-Z]/.test(val)) strength += 25;
+      if (/[a-z]/.test(val)) strength += 25;
+      if (/[0-9]/.test(val)) strength += 25;
+      
+      strengthBar.style.width = strength + '%';
+      
+      if (strength <= 25) strengthBar.style.background = 'var(--error)';
+      else if (strength <= 50) strengthBar.style.background = 'var(--warning)';
+      else if (strength <= 75) strengthBar.style.background = '#3b82f6';
+      else strengthBar.style.background = 'var(--success)';
+      
+      // Update indicators
+      document.getElementById('pwd-length').style.color = val.length >= 8 ? 'var(--success)' : 'var(--gray-400)';
+      document.getElementById('pwd-upper').style.color = /[A-Z]/.test(val) ? 'var(--success)' : 'var(--gray-400)';
+      document.getElementById('pwd-lower').style.color = /[a-z]/.test(val) ? 'var(--success)' : 'var(--gray-400)';
+      document.getElementById('pwd-number').style.color = /[0-9]/.test(val) ? 'var(--success)' : 'var(--gray-400)';
+    });
+  </script>
+</body>
+</html>
